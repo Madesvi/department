@@ -15,6 +15,7 @@ type DepParams struct {
 type DepartmentRepo interface {
 	Create(ctx context.Context, department models.Department) (models.Department, error)
 	GetByID(ctx context.Context, params DepParams) (models.Department, error)
+	Update(ctx context.Context, id int, updates map[string]any) (models.Department, error)
 }
 
 type EmployeeRepo interface {

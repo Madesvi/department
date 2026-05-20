@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"department/internal/models"
+	"errors"
 	"fmt"
 )
 
@@ -37,4 +38,19 @@ func (s *DepartmentService) GetDepartment(ctx context.Context, id int, depth int
 		return models.Department{}, fmt.Errorf("service get tree: %w", err)
 	}
 	return department, nil
+}
+
+func (s *DepartmentService) UpdateDepartment(ctx context.Context, id int, updates map[string]any) (models.Department, error) {
+	if parentID, ok := updates["parent_id"]; ok && parentID != nil {
+		if pIDFloat, ok := parentID.(float64); ok {
+			if int(pIDFloat) == id {
+				return models.Department{}, errors.New("a department cannot be its own parent")
+			}
+		}
+	}
+	dept, err := s.deptRepo.Update(ctx, id, updates)
+	if err != nil {
+		return models.Department{}, fmt.Errorf("service update: %w", err)
+	}
+	return dept, nil
 }

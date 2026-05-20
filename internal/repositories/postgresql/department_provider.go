@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type DepartmentProvider struct {
@@ -48,4 +49,20 @@ func (r DepartmentProvider) GetByID(ctx context.Context, params service.DepParam
 	}
 	return dept, nil
 
+}
+
+func (r DepartmentProvider) Update(ctx context.Context, id int, updates map[string]any) (models.Department, error) {
+	var updatedDept models.Department
+
+	err := r.db.WithContext(ctx).
+		Model(&updatedDept).
+		Clauses(clause.Returning{}).
+		Where("id = ?", id).
+		Updates(updates).Error
+
+	if err != nil {
+		return models.Department{}, fmt.Errorf("db update department: %w", err)
+	}
+
+	return updatedDept, nil
 }
