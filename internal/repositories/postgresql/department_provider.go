@@ -103,3 +103,23 @@ func (r DepartmentProvider) DeleteWithReassign(ctx context.Context, id int, newD
 		return nil
 	})
 }
+
+func (r DepartmentProvider) IsNameDuplicate(ctx context.Context, parentID *int, name string, excludeID int) (bool, error) {
+	var count int64
+	query := r.db.WithContext(ctx).Model(&models.Department{}).Where("name = ?", name)
+
+	if parentID == nil {
+		query = query.Where("parent_id IS NULL")
+	} else {
+		query = query.Where("parent_id = ?", *parentID)
+	}
+
+	if excludeID > 0 {
+		query = query.Where("id != ?", excludeID)
+	}
+
+	if err := query.Count(&count).Error; err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}

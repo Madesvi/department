@@ -18,6 +18,7 @@ type DepartmentRepo interface {
 	Update(ctx context.Context, id int, updates map[string]any) (models.Department, error)
 	DeleteCascade(ctx context.Context, id int) error
 	DeleteWithReassign(ctx context.Context, id int, newDeptID int) error
+	IsNameDuplicate(ctx context.Context, parentID *int, name string, excludeID int) (bool, error)
 }
 
 type EmployeeRepo interface {
