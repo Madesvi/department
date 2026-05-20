@@ -1,7 +1,9 @@
 package main
 
 import (
-	postgre "department/internal/repositories/postgresql"
+	"department/internal/api/router"
+	"department/internal/repositories/postgresql"
+	"department/internal/service"
 	"log/slog"
 	"net/http"
 	_ "net/http/pprof"
@@ -47,21 +49,21 @@ func main() {
 
 	slog.Debug("log level set", "value", logLevel)
 
-	db, err := postgre.ConnectDB()
+	db, err := postgresql.ConnectDB()
 	if err != nil {
 		slog.Error("database connection failed", "err", err)
 		os.Exit(1)
 	}
+	repo := postgresql.NewDepartmentRepo(db)
+	srv := service.NewDepartmentService(repo)
+
+	r := router.New(srv)
 
 	port := os.Getenv("SERVER_PORT")
-
-	secureMux := utils.ApplyMiddleWares(router, mw.SecurityHeaders)
-
 	// Create custom server
 	server := &http.Server{
 		Addr:    port,
-		Handler: secureMux,
-		// TLSConfig: tlsConfig,
+		Handler: r,
 	}
 
 	slog.Info("Server is running on port", "port", port)

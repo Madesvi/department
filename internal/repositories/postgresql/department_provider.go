@@ -17,8 +17,8 @@ func NewDepartmentRepo(db *gorm.DB) *DepartmentProvider {
 }
 
 func (r DepartmentProvider) CreateDP(ctx context.Context, department models.Department) (models.Department, error) {
-	if err := r.db.Create(department).Error; err != nil {
-		return models.Department{}, fmt.Errorf("create depertment: %w", err)
+	if err := r.db.WithContext(ctx).Create(&department).Error; err != nil {
+		return models.Department{}, fmt.Errorf("create department: %w", err)
 	}
 	return department, nil
 }
