@@ -54,8 +54,9 @@ func main() {
 		slog.Error("database connection failed", "err", err)
 		os.Exit(1)
 	}
-	repo := postgresql.NewDepartmentRepo(db)
-	srv := service.NewDepartmentService(repo)
+	deptRepo := postgresql.NewDepartmentRepo(db)
+	empRepo := postgresql.NewEmployeeRepo(db)
+	srv := service.NewDepartmentService(deptRepo, empRepo)
 
 	r := router.New(srv)
 

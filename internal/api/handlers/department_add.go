@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-type DeptProvider interface {
-	Add(ctx context.Context, dept models.Department) (models.Department, error)
+type DeptartmentCreator interface {
+	CreateDepartment(ctx context.Context, dept models.Department) (models.Department, error)
 }
 
 type CreateRequest struct {
@@ -17,7 +17,7 @@ type CreateRequest struct {
 	ParentID *int   `json:"parent_id"`
 }
 
-func AddDeptHandler(dept DeptProvider) http.HandlerFunc {
+func AddDeptHandler(create DeptartmentCreator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req CreateRequest
 
@@ -38,7 +38,7 @@ func AddDeptHandler(dept DeptProvider) http.HandlerFunc {
 			ParentID: req.ParentID,
 		}
 
-		newDept, err := dept.Add(r.Context(), srvDept)
+		newDept, err := create.CreateDepartment(r.Context(), srvDept)
 		if err != nil {
 			slog.Error("add departments", "err", err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)

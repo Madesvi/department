@@ -10,16 +10,15 @@ type DepartmentRepo interface {
 	CreateDP(ctx context.Context, department models.Department) (models.Department, error)
 }
 
+type EmployeeRepo interface {
+	CreateEmployee(ctx context.Context, employee models.Employee) (models.Employee, error)
+}
+
 type DepartmentService struct {
-	repo DepartmentRepo
-	// cache ...
+	deptRepo     DepartmentRepo
+	employeeRepo EmployeeRepo
 }
 
-func NewDepartmentService(r DepartmentRepo) *DepartmentService {
-	return &DepartmentService{repo: r}
-}
-
-func (s *DepartmentService) Create(ctx context.Context, dept models.Department) (models.Department, error) {
-	// validation... check...
-	return s.repo.CreateDP(ctx, dept)
+func NewDepartmentService(dr DepartmentRepo, er EmployeeRepo) *DepartmentService {
+	return &DepartmentService{deptRepo: dr, employeeRepo: er}
 }
