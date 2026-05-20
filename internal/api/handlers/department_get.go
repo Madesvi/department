@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+//go:generate mockery
 type DepartmentGetter interface {
 	GetDepartment(ctx context.Context, id int, depth int, includeEmployee bool) (models.Department, error)
 }
