@@ -3,12 +3,17 @@
 Для подключения приложения и утилиты миграций создайте файл `.env` в корне проекта:
 
 ```env
-DB_USER=dbuser
-DB_PASSWORD=yoursecurepass
+DB_USER=serverdbtest
+DB_PASSWORD=secure
 DB_NAME=restdb
-DB_PORT=5432
+DB_PORT=5455
 DB_HOST=localhost
 DB_SSLMODE=disable
+# Application server configuration
+SERVER_PORT=3000
+APP_ENV=development
+# APP_ENV=production
+LOG_LEVEL=DEBUG
 ```
 
 Или выполните комманду:
