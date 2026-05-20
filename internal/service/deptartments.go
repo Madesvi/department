@@ -54,3 +54,17 @@ func (s *DepartmentService) UpdateDepartment(ctx context.Context, id int, update
 	}
 	return dept, nil
 }
+
+func (s *DepartmentService) DeleteDepartment(ctx context.Context, id int, mode string, reassignID *int) error {
+	if mode == "reassign" {
+		if reassignID == nil {
+			return fmt.Errorf("reassign_to_department_id is required when mode=reassign")
+		}
+		if *reassignID == id {
+			return fmt.Errorf("cannot reassign employees to the department being deleted")
+		}
+		return s.deptRepo.DeleteWithReassign(ctx, id, *reassignID)
+	}
+
+	return s.deptRepo.DeleteCascade(ctx, id)
+}

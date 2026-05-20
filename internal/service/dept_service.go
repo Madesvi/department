@@ -16,6 +16,8 @@ type DepartmentRepo interface {
 	Create(ctx context.Context, department models.Department) (models.Department, error)
 	GetByID(ctx context.Context, params DepParams) (models.Department, error)
 	Update(ctx context.Context, id int, updates map[string]any) (models.Department, error)
+	DeleteCascade(ctx context.Context, id int) error
+	DeleteWithReassign(ctx context.Context, id int, newDeptID int) error
 }
 
 type EmployeeRepo interface {

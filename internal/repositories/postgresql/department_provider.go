@@ -66,3 +66,40 @@ func (r DepartmentProvider) Update(ctx context.Context, id int, updates map[stri
 
 	return updatedDept, nil
 }
+
+func (r DepartmentProvider) DeleteCascade(ctx context.Context, id int) error {
+	err := r.db.WithContext(ctx).Delete(&models.Department{}, id).Error
+	if err != nil {
+		return fmt.Errorf("db delete cascade: %w", err)
+	}
+	return nil
+}
+
+func (r DepartmentProvider) DeleteWithReassign(ctx context.Context, id int, newDeptID int) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		var check models.Department
+		if err := tx.First(&check, newDeptID).Error; err != nil {
+			return fmt.Errorf("target department %d not found: %w", newDeptID, err)
+		}
+
+		err := tx.Model(&models.Employee{}).
+			Where("department_id = ?", id).
+			Update("department_id", newDeptID).Error
+		if err != nil {
+			return fmt.Errorf("failed to reassign employees: %w", err)
+		}
+
+		err = tx.Model(&models.Department{}).
+			Where("parent_id = ?", id).
+			Update("parent_id", newDeptID).Error
+		if err != nil {
+			return fmt.Errorf("failed to reassign sub-departments: %w", err)
+		}
+
+		if err := tx.Delete(&models.Department{}, id).Error; err != nil {
+			return fmt.Errorf("failed to delete department: %w", err)
+		}
+
+		return nil
+	})
+}
