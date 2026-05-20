@@ -1,22 +1,13 @@
 include .env
 
 # Migration commands
-create_migration:
-	migrate create -ext=sql -dir=internal/database/migrations -seq init
-
 migrate_up:
-	migrate -path=internal/database/migrations -database "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" -verbose up $(STEP)
+	goose -dir migrations postgres "host=$(DB_HOST) port=$(DB_PORT) user=$(DB_USER) password=$(DB_PASSWORD) dbname=$(DB_NAME) sslmode=$(DB_SSLMODE)" up
 
 migrate_down:
-	migrate -path=internal/database/migrations -database "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" -verbose down $(STEP)
+	goose -dir migrations postgres "host=$(DB_HOST) port=$(DB_PORT) user=$(DB_USER) password=$(DB_PASSWORD) dbname=$(DB_NAME) sslmode=$(DB_SSLMODE)" down
 
-migrate_force:
-	migrate -path=internal/database/migrations -database "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" force 1
+migrate_status:
+	goose -dir migrations postgres "host=$(DB_HOST) port=$(DB_PORT) user=$(DB_USER) password=$(DB_PASSWORD) dbname=$(DB_NAME) sslmode=$(DB_SSLMODE)" status
 
-css:
-	npx @tailwindcss/cli -i ./views/css/input.css -o ./public/output.css --watch
-
-templ:
-	templ generate --proxy=http://localhost:3000 --watch
-
-.PHONY: create_migration migrate_up migrate_down migrate_force css templ
+.PHONY: migrate_up migrate_down migrate_status

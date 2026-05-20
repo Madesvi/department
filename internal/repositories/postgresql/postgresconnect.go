@@ -1,5 +1,4 @@
-// Package postgre provide connection to DB
-package postgre
+package postgresql
 
 import (
 	"context"
