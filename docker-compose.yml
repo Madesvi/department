@@ -1,19 +1,41 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    env_file: .env
+      - "${SERVER_PORT:-3000}:3000"
+    env_file:
+      - .env
     environment:
-      - DB_HOST=db # Указываем имя сервиса базы
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-serverdbtest}
+      - DB_PASSWORD=${DB_PASSWORD:-secure}
+      - DB_NAME=${DB_NAME:-restdb}
+      - DB_SSLMODE=${DB_SSLMODE:-disable}
+      - APP_ENV=${APP_ENV:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+      - SERVER_PORT=3000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: serverdb
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: school
+      POSTGRES_USER: ${DB_USER:-serverdbtest}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure}
+      POSTGRES_DB: ${DB_NAME:-restdb}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5455}:5432"
+    volumes:
+      - testdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  testdata:

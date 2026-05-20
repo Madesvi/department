@@ -61,6 +61,12 @@ func main() {
 	r := router.New(srv)
 
 	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		port = "3000"
+	}
+	if !strings.HasPrefix(port, ":") {
+		port = ":" + port
+	}
 	// Create custom server
 	server := &http.Server{
 		Addr:    port,
