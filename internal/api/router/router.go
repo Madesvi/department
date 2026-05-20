@@ -16,8 +16,8 @@ type RouterDeps interface {
 func New(deps RouterDeps) http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("POST /departments", handlers.AddDeptHandler(deps))
-	mux.HandleFunc("POST /departments/{id}/employees", handlers.AddEmployeeHandler(deps))
+	mux.HandleFunc("POST /departments/", handlers.AddDeptHandler(deps))
+	mux.HandleFunc("POST /departments/{id}/employees/", handlers.AddEmployeeHandler(deps))
 	mux.HandleFunc("GET /departments/{id}", handlers.GetDepartmentHandler(deps))
 	mux.HandleFunc("PATCH /departments/{id}", handlers.PatchDepartmentHadler(deps))
 	mux.HandleFunc("DELETE /departments/{id}", handlers.DeleteDepartmentHandler(deps))
