@@ -6,8 +6,15 @@ import (
 	"department/internal/models"
 )
 
+type DepParams struct {
+	ID              int
+	Depth           int
+	IncludeEmployee bool
+}
+
 type DepartmentRepo interface {
-	CreateDP(ctx context.Context, department models.Department) (models.Department, error)
+	Create(ctx context.Context, department models.Department) (models.Department, error)
+	GetByID(ctx context.Context, params DepParams) (models.Department, error)
 }
 
 type EmployeeRepo interface {

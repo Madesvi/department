@@ -8,6 +8,7 @@ import (
 type RouterDeps interface {
 	handlers.DeptartmentCreator
 	handlers.EmployeeCreator
+	handlers.DepartmentGetter
 }
 
 func New(deps RouterDeps) http.Handler {
@@ -15,7 +16,7 @@ func New(deps RouterDeps) http.Handler {
 
 	mux.HandleFunc("POST /departments", handlers.AddDeptHandler(deps))
 	mux.HandleFunc("POST /departments/{id}/employees", handlers.AddEmployeeHandler(deps))
-	// mux.HandleFunc("GET /departments/{id}", handlers.)
+	mux.HandleFunc("GET /departments/{id}", handlers.GetDepartmentHandler(deps))
 	// mux.HandleFunc("PATCH /departments/{id}", handlers.)
 	// mux.HandleFunc("DELETE /departments/{id}", handlers.)
 
