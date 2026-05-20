@@ -37,7 +37,7 @@ func GetDepartmentHandler(get DepartmentGetter) http.HandlerFunc {
 			}
 		}
 		includeEmployees := true
-		if ieStr := query.Get("include_employee"); ieStr != "" {
+		if ieStr := query.Get("include_employees"); ieStr != "" {
 			includeEmployees, _ = strconv.ParseBool(ieStr)
 		}
 
@@ -50,14 +50,18 @@ func GetDepartmentHandler(get DepartmentGetter) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+
+		employee := resDep.Employee
+		children := resDep.Children
+
 		response := struct {
-			Department models.Department
-			Employee   []models.Employee
-			Children   []models.Department
+			Department models.Department   `json:"department"`
+			Employee   []models.Employee   `json:"employees"`
+			Children   []models.Department `json:"children"`
 		}{
 			Department: resDep,
-			Employee:   resDep.Employee,
-			Children:   resDep.Children,
+			Employee:   employee,
+			Children:   children,
 		}
 		err = json.NewEncoder(w).Encode(response)
 		if err != nil {
