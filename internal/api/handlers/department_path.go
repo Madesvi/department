@@ -41,7 +41,7 @@ func PatchDepartmentHadler(update DepartmentUpdater) http.HandlerFunc {
 
 		err = json.NewEncoder(w).Encode(resDep)
 		if err != nil {
-			slog.Error("error encoding response", "err", err)
+			slog.Warn("error encoding response", "err", err)
 		}
 	}
 }

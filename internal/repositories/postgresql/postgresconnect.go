@@ -30,7 +30,7 @@ func ConnectDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to DB: %w", err)
 	}
-	slog.Debug("--- Connected to DB ---", "host", host, "port", port)
+	slog.Info("--- Connected to DB ---", "host", host, "port", port)
 
 	sqlDB, err := db.DB()
 	if err != nil {

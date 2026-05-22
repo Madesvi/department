@@ -21,7 +21,7 @@ func (s *DepartmentService) CreateDepartment(ctx context.Context, dept models.De
 
 	cleanedName, err := validateString(dept.Name, 1, 200)
 	if err != nil {
-		return models.Department{}, fmt.Errorf("name: %w", err)
+		return models.Department{}, fmt.Errorf("clean name: %w", err)
 	}
 	dept.Name = cleanedName
 
@@ -50,7 +50,7 @@ func (s *DepartmentService) AddEmployeeToDepartment(ctx context.Context, id int,
 
 	cleanedName, err := validateString(employee.FullName, 1, 200)
 	if err != nil {
-		return models.Employee{}, fmt.Errorf("full_name: %w", err)
+		return models.Employee{}, fmt.Errorf("clean full_name: %w", err)
 	}
 	employee.FullName = cleanedName
 

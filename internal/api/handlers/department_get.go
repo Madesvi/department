@@ -44,7 +44,7 @@ func GetDepartmentHandler(get DepartmentGetter) http.HandlerFunc {
 
 		resDep, err := get.GetDepartment(r.Context(), depID, depth, includeEmployees)
 		if err != nil {
-			slog.Error("get departments", "err", err)
+			slog.Warn("get departments", "err", err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
@@ -66,7 +66,7 @@ func GetDepartmentHandler(get DepartmentGetter) http.HandlerFunc {
 		}
 		err = json.NewEncoder(w).Encode(response)
 		if err != nil {
-			slog.Error("error encoding response", "err", err)
+			slog.Warn("error encoding response", "err", err)
 		}
 	}
 }

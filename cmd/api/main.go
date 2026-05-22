@@ -47,7 +47,7 @@ func main() {
 	slog.SetDefault(logger)
 	// Load logger
 
-	slog.Debug("log level set", "value", logLevel)
+	slog.Info("log level set", "value", logLevel)
 
 	db, err := postgresql.ConnectDB()
 	if err != nil {

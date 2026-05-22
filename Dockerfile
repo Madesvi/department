@@ -10,6 +10,10 @@ RUN go mod download
 
 COPY . .
 
+# flags:
+#       -ldflags="-s -w"
+#       -s omit symbols (delete symbol table like simple obfuscate)
+#       -w (delete debug info)
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -trimpath -o main ./cmd/api/main.go
 
 # --- Stage 2: Runner ---

@@ -23,7 +23,7 @@ func AddDeptHandler(create DeptartmentCreator) http.HandlerFunc {
 
 		defer r.Body.Close()
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			slog.Error("failed to decode body", "err", err)
+			slog.Warn("failed to decode body", "err", err)
 			http.Error(w, "Invalid request Body", http.StatusBadRequest)
 			return
 		}

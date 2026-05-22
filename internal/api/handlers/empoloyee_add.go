@@ -34,7 +34,7 @@ func AddEmployeeHandler(create EmployeeCreator) http.HandlerFunc {
 		var req CreateEmployeeRequest
 		defer r.Body.Close()
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			slog.Error("failed to decode body", "err", err)
+			slog.Warn("failed to decode body", "err", err)
 			http.Error(w, "Invalid request Body", http.StatusBadRequest)
 			return
 		}
@@ -68,7 +68,7 @@ func AddEmployeeHandler(create EmployeeCreator) http.HandlerFunc {
 		}
 		err = json.NewEncoder(w).Encode(response)
 		if err != nil {
-			slog.Error("error encoding response", "err", err)
+			slog.Warn("error encoding response", "err", err)
 		}
 	}
 }

@@ -16,7 +16,7 @@ func DeleteDepartmentHandler(deleter DepartmentDeleter) http.HandlerFunc {
 		idStr := r.PathValue("id")
 		depID, err := strconv.Atoi(idStr)
 		if err != nil {
-			slog.Warn("invalid id in delete url", "id", idStr)
+			slog.Warn("invalid id", "id", idStr)
 			http.Error(w, "Invalid ID", http.StatusBadRequest)
 			return
 		}
